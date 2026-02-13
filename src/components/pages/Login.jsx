@@ -1,5 +1,7 @@
 import React from "react";
+import { useNavigate } from "react-router";
 const Login = () => {
+  const navigate = useNavigate();
   return (
     <div className="login-container">
       <div className="header flex justify-between bg-gray-200 p-4">
@@ -75,6 +77,8 @@ const Login = () => {
             <button
               type="submit"
               className="bg-blue-500 text-white px-4 py-2 rounded-md"
+              onClick={() => {if(!form){}
+            else{navigate("/dashboard")}}}
             >
               Sign In
             </button>

@@ -1,13 +1,12 @@
 import React from "react";
-import LeftSideBar from "./leftSide/leftSideBar";
-import RightSideBar from "./rightSide/rightSideBar";
-import "./mainContainer.css";
+import { Outlet } from "react-router-dom";  
+import LeftSideBar from "./leftSideBar";
 
 const MainContainer = () => {
   return (
     <div className="flex ">
       <LeftSideBar />
-      <RightSideBar />
+      <Outlet /> 
     </div>
   );
 };

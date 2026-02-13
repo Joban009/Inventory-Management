@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { MdDarkMode } from "react-icons/md";
@@ -8,11 +8,14 @@ import { MdFilterList } from "react-icons/md";
 import { MdOutlineRotateLeft } from "react-icons/md";
 import { FaHeadphones } from "react-icons/fa6";
 import { RiProgress7Line } from "react-icons/ri";
+import AddItems from "../../addItems";
 
 
+const inventory = () => {
+  const [showModel , setShowModel] = useState(false);
+ 
+    
 
-
-const rightSideBar = () => {
   return (
     <div className="w-9/12 h-screen p-4 bg-gray-200">
       <div className="header m-3 flex items-center justify-between">
@@ -37,7 +40,6 @@ const rightSideBar = () => {
         <div className="left">
           <h1 className="text-2xl font-bold">Inventory Management</h1>
           <p className="text-sm text-gray-400">
-            {" "}
             Real-time overview of your warehouse stock and catalog.
           </p>
         </div>
@@ -46,10 +48,14 @@ const rightSideBar = () => {
             <MdDownload />
             <p>Export</p>
           </button>
-          <button className="flex items-center gap-2 border border-blue-400 bg-blue-500 text-white py-2 px-4 rounded-md">
+          <button className="flex items-center gap-1 bg-blue-500 p-[5px] rounded-md text-white" onClick={()=> setShowModel(true)}>
             <IoIosAdd />
             <p>Add New Item</p>
           </button>
+          {showModel && <AddItems onClose={()=> setShowModel(false)} />}
+          <div className="tooltip">
+            
+          </div>
         </div>
       </div>
       <div className="flex gap-2 m-3 ">
@@ -210,6 +216,7 @@ const rightSideBar = () => {
       </footer>
     </div>
   );
-}
+};
 
-export default rightSideBar
+
+export default inventory;
