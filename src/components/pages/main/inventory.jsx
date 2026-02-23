@@ -9,6 +9,8 @@ import { MdOutlineRotateLeft } from "react-icons/md";
 import { FaHeadphones } from "react-icons/fa6";
 import { RiProgress7Line } from "react-icons/ri";
 import AddItems from "../../addItems";
+import Navbar from "../../navbar";
+import InventoryStick from "../../inventoryStock";
 
 
 const inventory = () => {
@@ -18,24 +20,11 @@ const inventory = () => {
 
   return (
     <div className="w-9/12 h-screen p-4 bg-gray-200">
-      <div className="header m-3 flex items-center justify-between">
-        <div className="flex items-center gap-2 border-1 rounded-md w-2/3">
-          <IoIosSearch className="ml-2" />
-          <input
-            type="text"
-            className="w-full p-2 rounded-md border-none"
-            placeholder="Search..."
-          />
-        </div>
-        <div className="flex items-center gap-4">
-          <button>
-            <IoMdNotificationsOutline className="text-2xl" />
-          </button>
-          <button>
-            <MdDarkMode className="text-2xl" />
-          </button>
-        </div>
-      </div>
+
+
+      <Navbar />
+
+
       <div className="content m-3 flex items-center justify-between">
         <div className="left">
           <h1 className="text-2xl font-bold">Inventory Management</h1>
@@ -53,33 +42,9 @@ const inventory = () => {
             <p>Add New Item</p>
           </button>
           {showModel && <AddItems onClose={()=> setShowModel(false)} />}
-          <div className="tooltip">
-            
-          </div>
         </div>
       </div>
-      <div className="flex gap-2 m-3 ">
-        <div className="w-1/4 h-auto bg-white p-4 rounded-md shadow-md">
-          <h2 className="text-l text-gray-500 mb-2">Total Items</h2>
-          <p className="text-xl font-bold">1240</p>
-          <span className="text-sm text-green-600 ">Lorem ipsum dolor.</span>
-        </div>
-        <div className="w-1/4 h-auto bg-white p-4 rounded-md shadow-md">
-          <h2 className="text-l text-gray-500 mb-2">Low Stock Alerts</h2>
-          <p className="text-xl font-bold">12</p>
-          <span className="text-sm text-green-600 ">Lorem ipsum dolor.</span>
-        </div>
-        <div className="w-1/4 h-auto bg-white p-4 rounded-md shadow-md">
-          <h2 className="text-l text-gray-500 mb-2">Out of Stock</h2>
-          <p className="text-xl font-bold">5</p>
-          <span className="text-sm text-green-600 ">Lorem ipsum dolor.</span>
-        </div>
-        <div className="w-1/4 h-auto bg-white p-4 rounded-md shadow-md">
-          <h2 className="text-l text-gray-500 mb-2">Inventory Value</h2>
-          <p className="text-xl font-bold">$45,200</p>
-          <span className="text-sm text-green-600 ">Lorem ipsum dolor.</span>
-        </div>
-      </div>
+      <InventoryStick />
       <div className="m-3 bg-white p-4 rounded-md shadow-md">
         <div className="flex items-center justify-between m-3">
           <h2 className="text-xl font-bold mb-4">Product Catalog</h2>
