@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
+import axios from "axios";
 const Login = () => {
   const navigate = useNavigate();
 
@@ -8,15 +9,38 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [orgname, setOrgname] = useState("");
   const [password, setPassword] = useState("");
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
-    if (currState === "Sign Up") {
-      // Handle sign-up logic here
-      signup(username, email, orgname, password);
-    } else {
-      // Handle login logic here
-      login(email, password);
+
+    // Use the form values directly
+    const formData = new FormData(e.target);
+    const userName = formData.get("fname");
+    const userEmail = formData.get("usernameoremail");
+
+    try {
+      const res = await axios.post(
+        "http://localhost/Inventory_Management/InventoryMGT/backend/login_registration.php",
+        { userName, userEmail },
+      );
+      if (res.data.status == "success") {
+        alert("Login successful");
+      }
+
+      if (res.data.status !== "success") {
+        throw new Error(res.data.message);
+      }
+
+      return res.data;
+    } catch (err) {
+      alert(err.response?.data?.message || "Something went wrong");
     }
+    // if (currState === "Sign Up") {
+    //   // Handle sign-up logic here
+    //   signup(username, email, orgname, password);
+    // } else {
+    //   // Handle login logic here
+    //   login(email, password);
+    // }
   };
   return (
     <div className="login-container">
@@ -48,6 +72,8 @@ const Login = () => {
         <div className="w-100 h-auto ">
           <form
             onSubmit={onSubmitHandler}
+            method="POST"
+            action="login_registration.php"
             className=" flex flex-col gap-2 w-full h-autoitems-center justify-center text-center "
           >
             {currState === "Sign Up" ? (
@@ -143,12 +169,12 @@ const Login = () => {
             <button
               type="submit"
               className="bg-blue-500 text-white px-4 py-2 rounded-md"
-              onClick={() => {
-                if (!form) {
-                } else {
-                  navigate("/dashboard");
-                }
-              }}
+              // onClick={() => {
+              //   if (!form) {
+              //   } else {
+              //     navigate("/dashboard");
+              //   }
+              // }}
             >
               {currState === "Sign Up" ? "Sign Up" : "Sign In"}
             </button>

@@ -9,12 +9,12 @@ import Setting from "./components/pages/main/setting";
 import Report from "./components/pages/main/report";
 import Supplier from "./components/pages/main/supplier";
 import "./App.css";
-import StockTrendChart from "./components/charts/stockTrendChart";
+// import StockTrendChart from "./components/charts/stockTrendChart";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<StockTrendChart />} />
+      <Route path="/" element={<Login />} />
       <Route element={<MainContainer />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/inventory" element={<Inventory />} />
