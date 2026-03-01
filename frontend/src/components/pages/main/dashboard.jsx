@@ -11,7 +11,7 @@ import { IoMdAddCircleOutline } from "react-icons/io";
 
 const dashboard = () => {
   return (
-    <div className="w-screen h-screen">
+    <div className="max-w-screen max-h-screen">
       <Navbar />
       <div className="content m-3 flex items-center justify-between">
         <div className="left">
@@ -45,7 +45,7 @@ const dashboard = () => {
             </div>
           </div>
           <div className="chart w-full flex justify-center">
-            <div className="w-full max-w-xl">
+            <div className="w-full max-w-2xl h-auto">
               <StockTrendChart />
             </div>
           </div>

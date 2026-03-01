@@ -6,41 +6,60 @@ const Login = () => {
 
   const [currState, setCurrState] = useState("Sign Up");
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
   const [orgname, setOrgname] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const action = currState === "Sign Up" ? "register" : "login" ;
+  
+
+
+  
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-
-    // Use the form values directly
     const formData = new FormData(e.target);
-    const userName = formData.get("fname");
-    const userEmail = formData.get("usernameoremail");
 
     try {
-      const res = await axios.post(
-        "http://localhost/Inventory_Management/InventoryMGT/backend/login_registration.php",
-        { userName, userEmail },
-      );
-      if (res.data.status == "success") {
-        alert("Login successful");
+      let res;
+
+      if (currState === "Sign Up") {
+        res = await axios.post(
+          "http://localhost/Inventory_Management/InventoryMGT/backend/login_registration.php",
+          {
+            action: "register",
+            userName: formData.get("fname"),
+            orgName: formData.get("orgname"),
+            userEmail: formData.get("usernameoremail"),
+            password: formData.get("password"),
+          },
+        );
+
+        if (res.data.status === "success") {
+          alert("Registration successful");
+          setCurrState("Login"); // switch to login
+        }
+      } else {
+        res = await axios.post(
+          "http://localhost/Inventory_Management/InventoryMGT/backend/login_registration.php",
+          {
+            action: "login",
+            userEmail: formData.get("usernameoremail"),
+            password: formData.get("password"),
+          },
+        );
+
+        if (res.data.status === "success") {
+          localStorage.setItem("user", JSON.stringify(res.data.user));
+          navigate("/dashboard");
+        }
       }
 
       if (res.data.status !== "success") {
         throw new Error(res.data.message);
       }
-
-      return res.data;
     } catch (err) {
       alert(err.response?.data?.message || "Something went wrong");
     }
-    // if (currState === "Sign Up") {
-    //   // Handle sign-up logic here
-    //   signup(username, email, orgname, password);
-    // } else {
-    //   // Handle login logic here
-    //   login(email, password);
-    // }
   };
   return (
     <div className="login-container">
@@ -169,12 +188,6 @@ const Login = () => {
             <button
               type="submit"
               className="bg-blue-500 text-white px-4 py-2 rounded-md"
-              // onClick={() => {
-              //   if (!form) {
-              //   } else {
-              //     navigate("/dashboard");
-              //   }
-              // }}
             >
               {currState === "Sign Up" ? "Sign Up" : "Sign In"}
             </button>
@@ -200,12 +213,6 @@ const Login = () => {
                   </span>
                 </p>
               )}
-              {currState === "login" ? (
-                <p className="login-toggle">
-                  Forget Password
-                  <span onClick={() => resetPass(email)}>Reset here</span>
-                </p>
-              ) : null}
             </div>
           </form>
         </div>

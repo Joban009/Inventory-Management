@@ -3,7 +3,7 @@
 $host = "localhost";
 $user = "root";
 $password = "";
-$database = "users";
+$database = "inventorymgt";
 
 // Create MySQLi connection
 $conn = new mysqli($host, $user, $password, $database);

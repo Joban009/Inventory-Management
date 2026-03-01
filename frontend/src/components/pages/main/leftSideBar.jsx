@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import { MdInventory2 } from "react-icons/md";
 import { MdDashboard } from "react-icons/md";
 import { LuPackage } from "react-icons/lu";
@@ -7,17 +7,13 @@ import { MdPeopleAlt } from "react-icons/md";
 import { IoMdSettings } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { IoIosLogOut } from "react-icons/io";
-import { useNavigate } from 'react-router';
-
-
-
+import { useNavigate } from "react-router";
 
 const leftSideBar = () => {
-  
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   return (
-    <div className="w-3/12 bg-gray-200 h-screen p-4 flex flex-col justify-between">
+    <div className="max-w-64 bg-gray-200 max-h-screen p-4 flex flex-col justify-between">
       <div>
         <div className="top">
           <div className="flex items-center gap-2">
@@ -29,24 +25,39 @@ const navigate = useNavigate();
           </div>
         </div>
         <div className="flex flex-col ml-auto gap-6 mt-10">
-          <button className="flex items-center gap-2" onClick={()=>navigate("./dashboard")}>
+          <button
+            className="flex items-center gap-2"
+            onClick={() => navigate("./dashboard")}
+          >
             <MdDashboard />
             <p>Dashboard</p>
           </button>
-          <button className="flex items-center gap-2" onClick={()=>navigate("./inventory")}>
+          <button
+            className="flex items-center gap-2"
+            onClick={() => navigate("./inventory")}
+          >
             <LuPackage />
             <p>Inventory</p>
           </button>
-          <button className="flex items-center gap-2" onClick={()=>navigate("./report")}>
+          <button
+            className="flex items-center gap-2"
+            onClick={() => navigate("./report")}
+          >
             <TbReportAnalytics />
             <p>Reports</p>
           </button>
-          <button className="flex items-center gap-2" onClick={()=>navigate("./supplier")}>
+          <button
+            className="flex items-center gap-2"
+            onClick={() => navigate("./supplier")}
+          >
             <MdPeopleAlt />
             <p>Supplier</p>
           </button>
           <hr className="border-gray-400" />
-          <button className="flex items-center gap-2" onClick={()=>navigate("./setting")}>
+          <button
+            className="flex items-center gap-2"
+            onClick={() => navigate("./setting")}
+          >
             <IoMdSettings />
             <p>Settings</p>
           </button>
@@ -61,7 +72,10 @@ const navigate = useNavigate();
           </div>
         </div>
         <div>
-          <button className="flex items-center gap-2 justify-center content-center w-full mt-4 bg-gray-500 text-white py-2 rounded-md" onClick={()=>navigate("/")}>
+          <button
+            className="flex items-center gap-2 justify-center content-center w-full mt-4 bg-gray-500 text-white py-2 rounded-md"
+            onClick={() => navigate("/")}
+          >
             <IoIosLogOut />
             Logout
           </button>
@@ -69,6 +83,6 @@ const navigate = useNavigate();
       </div>
     </div>
   );
-}
+};
 
-export default leftSideBar
+export default leftSideBar;

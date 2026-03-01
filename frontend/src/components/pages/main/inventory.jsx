@@ -19,7 +19,7 @@ const inventory = () => {
     
 
   return (
-    <div className="w-9/12 h-screen p-4 bg-gray-200">
+    <div className="w-full h-screen p-4 bg-gray-200">
 
 
       <Navbar />
