@@ -1,26 +1,26 @@
-import React from 'react'
+import React from "react";
 
-const footer = () => {
+const Footer = () => {
   return (
-    <div className='flex justify-center items-center gap-10 p-2 bg-gray-100 mt-auto'>
-      <div className="flex items-center gap-4">
-        <p className="text-sm text-gray-500">
-            &copy. 2025 InvTrack System Inc. All rights reserved.
-            </p>
-      </div>
-      <div className="flex items-center gap-4">
-        <p className="text-sm text-gray-500">
+    <footer className="shrink-0 border-t border-gray-200 bg-white px-6 py-4">
+      <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
+        <p className="text-xs text-gray-500">
+          © 2024 InvTrack Systems Inc. All rights reserved.
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-6">
+          <a href="#" className="text-xs text-gray-500 transition-colors hover:text-gray-800">
             Terms of Service
-            </p>
-        <p className="text-sm text-gray-500">
+          </a>
+          <a href="#" className="text-xs text-gray-500 transition-colors hover:text-gray-800">
             Privacy Policy
-            </p>
-        <p className="text-sm text-gray-500">
+          </a>
+          <a href="#" className="text-xs text-gray-500 transition-colors hover:text-gray-800">
             Help Center
-            </p>
+          </a>
+        </div>
       </div>
-    </div>
-  )
-}
+    </footer>
+  );
+};
 
-export default footer
+export default Footer;

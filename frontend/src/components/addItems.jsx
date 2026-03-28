@@ -1,117 +1,168 @@
-import React, { useState } from 'react'
-import { IoMdAddCircle } from "react-icons/io";
+import React, { useState } from "react";
+import { IoMdAdd } from "react-icons/io";
+import { IoClose } from "react-icons/io5";
 
+const AddItems = ({ onClose }) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    category: "",
+    initial: "",
+    price: "",
+    description: "",
+  });
 
-const addItems = ({onClose}) => {
-        const[formData, setForrmData] = useState({
-            name: "",
-            category:"",
-            initial: "",
-                price: "",
-                description: "",
-        });
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-        const[items, setItems] = useState([]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.name || !formData.price) {
+      alert("Please fill in all required fields");
+      return;
+    }
+    onClose();
+  };
 
-        const handelChange = (e) => {
-            setForrmData({
-                ...formData,
-                [e.target.name]: e.target.value,
-            });
-        };
-
-        const handelSubmit = (e) => {
-            e.preventDefault();
-
-            if(!formData.name || !formData.price){
-                alert("Please fill in all required fields");
-                return;
-            }
-            const newItem = {
-                id: Date.now(),
-                ...formData,
-            };
-            setItems([...items, newItem]);
-            setForrmData({
-                name: "",
-                category:"",
-                initial: "",
-                price: "",
-                description: "",
-            });
-            onClose();
-    };
   return (
-    <div className="flex h-screen justify-center items-center bg-black bg-transparent backdrop-opacity-90 p-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-      <div className="border-1 rounded-md bg-white p-6">
-        <h2 className="text-center font-bold text-xl">Create New Item</h2>
-        <form
-          onSubmit={handelSubmit}
-          className="flex flex-col justify-center items-left gap-2"
-        >
-          <label htmlFor="name">Item Name</label>
-          <input
-            type="text"
-            name="name"
-            placeholder="e.g. Wireless Mechinical Keyboard"
-            onChange={handelChange}
-            value={formData.name}
-            className="border-1 rounded-sm px-2 py-0.5"
-          />
-          <label htmlFor="category">Category</label>
-          <select
-            name="category"
-            id="category"
-            onChange={handelChange}
-            value={formData.category}
-            className="border-1 rounded-sm px-2 py-0.5"
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-gray-900/50 p-4 backdrop-blur-[2px]"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="create-item-title"
+    >
+      <div className="w-full max-w-lg rounded-2xl border border-gray-200 bg-white shadow-xl">
+        <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+          <h2 id="create-item-title" className="text-lg font-bold text-gray-900">
+            Create New Item
+          </h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800"
+            aria-label="Close"
           >
-            <option value="">Select a category</option>
-            <option value="electronics">Electronics</option>
-            <option value="furniture">Furniture</option>
-          </select>
-          <div className="flex gap-2 mt-1">
-            <label htmlFor="initial">Initial Stock</label>
-            <input
-              type="number"
-              name="initial"
-              placeholder="e.g. 0"
-              onChange={handelChange}
-              value={formData.initial}
-              className="border-1 rounded-sm px-2 py-0.5"
-            />
-            <label htmlFor="price">Price</label>
-            <input
-              type="number"
-              name="price"
-              placeholder="e.g. 100"
-              onChange={handelChange}
-              value={formData.price}
-              className="border-1 rounded-sm px-2 py-0.5"
-            />
+            <IoClose className="h-5 w-5" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="px-6 py-5">
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="name" className="mb-1.5 block text-xs font-bold text-gray-900">
+                Item Name
+              </label>
+              <input
+                id="name"
+                type="text"
+                name="name"
+                placeholder="e.g., Wireless Mechanical Keyboard"
+                onChange={handleChange}
+                value={formData.name}
+                className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              />
+            </div>
+            <div>
+              <label htmlFor="category" className="mb-1.5 block text-xs font-bold text-gray-900">
+                Category
+              </label>
+              <div className="relative">
+                <select
+                  id="category"
+                  name="category"
+                  onChange={handleChange}
+                  value={formData.category}
+                  className="w-full appearance-none rounded-lg border border-gray-200 bg-white px-3 py-2.5 pr-10 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                >
+                  <option value="">Select a category</option>
+                  <option value="electronics">Electronics</option>
+                  <option value="furniture">Furniture</option>
+                  <option value="apparel">Apparel</option>
+                  <option value="accessories">Accessories</option>
+                </select>
+                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                  ▼
+                </span>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label htmlFor="initial" className="mb-1.5 block text-xs font-bold text-gray-900">
+                  Initial Stock
+                </label>
+                <input
+                  id="initial"
+                  type="number"
+                  name="initial"
+                  placeholder="0"
+                  min={0}
+                  onChange={handleChange}
+                  value={formData.initial}
+                  className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                />
+              </div>
+              <div>
+                <label htmlFor="price" className="mb-1.5 block text-xs font-bold text-gray-900">
+                  Price
+                </label>
+                <div className="relative flex items-center">
+                  <span className="pointer-events-none absolute left-3 text-sm font-medium text-gray-500">$</span>
+                  <input
+                    id="price"
+                    type="number"
+                    name="price"
+                    placeholder="0.00"
+                    step="0.01"
+                    min={0}
+                    onChange={handleChange}
+                    value={formData.price}
+                    className="w-full rounded-lg border border-gray-200 py-2.5 pl-7 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  />
+                </div>
+              </div>
+            </div>
+            <div>
+              <label htmlFor="description" className="mb-1.5 block text-xs font-bold text-gray-900">
+                Description
+              </label>
+              <textarea
+                id="description"
+                name="description"
+                rows={4}
+                placeholder="Provide details about the item's specifications, condition, or storage requirements..."
+                onChange={handleChange}
+                value={formData.description}
+                className="w-full resize-y rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              />
+            </div>
           </div>
-          <label htmlFor="description">Description</label>
-          <textarea
-            name="description"
-            placeholder="e.g. A high-quality wireless mechanical keyboard with customizable RGB lighting and programmable keys."
-            onChange={handelChange}
-            value={formData.description}
-            className="border-1 rounded-sm px-2 py-0.5"
-          ></textarea>
-          <div className='flex items-center justify-end text-center gap-2 mt-4'>
-          <button type="button" onClick={onClose} className='flex gap-1 items-center border border-gray-300 px-4 py-2 rounded-md'>
-            Cancel
-          </button>
-          <button type="submit" className='flex gap-1 items-center bg-blue-500 text-white px-4 py-2 rounded-md'>
-            <IoMdAddCircle />
-            Add Item
-          </button>
+
+          <div className="mt-6 flex justify-end gap-3 border-t border-gray-200 pt-5">
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-95"
+              style={{ backgroundColor: "#1D72E7" }}
+            >
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20">
+                <IoMdAdd className="h-4 w-4" />
+              </span>
+              Save Item
+            </button>
           </div>
         </form>
       </div>
     </div>
   );
-}
+};
 
-export default addItems
-
+export default AddItems;

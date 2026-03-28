@@ -1,0 +1,54 @@
+{
+  "products": [
+    {
+      "name": "Premium Headphones",
+      "sku": "PH-102",
+      "category": "Electronics",
+      "catClass": "bg-blue-50 text-blue-700 ring-blue-100",
+      "stockLabel": "Good",
+      "stockPct": 85,
+      "barClass": "bg-emerald-500",
+      "price": "$149.99"
+    },
+    {
+      "name": "Ergonomic Office Chair",
+      "sku": "CH-204",
+      "category": "Furniture",
+      "catClass": "bg-violet-50 text-violet-700 ring-violet-100",
+      "stockLabel": "Low",
+      "stockPct": 28,
+      "barClass": "bg-amber-500",
+      "price": "$329.00"
+    },
+    {
+      "name": "Wireless Mechanical Keyboard",
+      "sku": "MK-22",
+      "category": "Electronics",
+      "catClass": "bg-blue-50 text-blue-700 ring-blue-100",
+      "stockLabel": "Critical",
+      "stockPct": 8,
+      "barClass": "bg-red-500",
+      "price": "$89.50"
+    },
+    {
+      "name": "USB-C Hub Pro",
+      "sku": "AC-881",
+      "category": "Accessories",
+      "catClass": "bg-teal-50 text-teal-700 ring-teal-100",
+      "stockLabel": "Good",
+      "stockPct": 72,
+      "barClass": "bg-emerald-500",
+      "price": "$45.00"
+    },
+    {
+      "name": "4K Monitor 27\"",
+      "sku": "MN-440",
+      "category": "Electronics",
+      "catClass": "bg-blue-50 text-blue-700 ring-blue-100",
+      "stockLabel": "Low",
+      "stockPct": 35,
+      "barClass": "bg-amber-500",
+      "price": "$399.99"
+    }
+  ]
+}

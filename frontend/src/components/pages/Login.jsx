@@ -1,20 +1,47 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import { HiOutlineMail } from "react-icons/hi";
+import { IoLockClosedOutline } from "react-icons/io5";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import { FcGoogle } from "react-icons/fc";
+import { LuPackage } from "react-icons/lu";
+
+const API_BASE =
+  "http://localhost/Inventory_Management/InventoryMGT/backend/login_registration.php";
+
+const inputShell =
+  "flex w-full items-center gap-3 rounded-xl border border-transparent bg-[#F3F4FF] px-4 py-3 text-sm text-gray-900 outline-none transition focus-within:border-indigo-200 focus-within:ring-2 focus-within:ring-indigo-100";
+
+const labelClass = "mb-2 block text-[11px] font-semibold uppercase tracking-wide text-gray-600";
+
+const primaryBtn =
+  "w-full rounded-xl bg-[#3B5BDB] py-3.5 text-center text-sm font-semibold text-white shadow-sm transition hover:bg-[#2F4AC4] active:scale-[0.99]";
+
+const googleBtn =
+  "flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white py-3 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50";
+
+const plainInput =
+  "w-full rounded-xl border border-transparent bg-[#F3F4FF] px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-indigo-200 focus:ring-2 focus:ring-indigo-100";
+
+function SocialDivider({ children }) {
+  return (
+    <div className="relative my-6">
+      <div className="absolute inset-0 flex items-center" aria-hidden>
+        <div className="w-full border-t border-gray-200" />
+      </div>
+      <div className="relative flex justify-center text-xs font-semibold uppercase tracking-widest text-gray-400">
+        <span className="bg-white px-3">{children}</span>
+      </div>
+    </div>
+  );
+}
+
 const Login = () => {
   const navigate = useNavigate();
+  const [currState, setCurrState] = useState("Login");
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [currState, setCurrState] = useState("Sign Up");
-  const [username, setUsername] = useState("");
-  const [orgname, setOrgname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const action = currState === "Sign Up" ? "register" : "login" ;
-  
-
-
-  
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -23,30 +50,24 @@ const Login = () => {
       let res;
 
       if (currState === "Sign Up") {
-        res = await axios.post(
-          "http://localhost/Inventory_Management/InventoryMGT/backend/login_registration.php",
-          {
-            action: "register",
-            userName: formData.get("fname"),
-            orgName: formData.get("orgname"),
-            userEmail: formData.get("usernameoremail"),
-            password: formData.get("password"),
-          },
-        );
+        res = await axios.post(API_BASE, {
+          action: "register",
+          userName: formData.get("fname"),
+          orgName: formData.get("orgname"),
+          userEmail: formData.get("usernameoremail"),
+          password: formData.get("password"),
+        });
 
         if (res.data.status === "success") {
           alert("Registration successful");
-          setCurrState("Login"); // switch to login
+          setCurrState("Login");
         }
       } else {
-        res = await axios.post(
-          "http://localhost/Inventory_Management/InventoryMGT/backend/login_registration.php",
-          {
-            action: "login",
-            userEmail: formData.get("usernameoremail"),
-            password: formData.get("password"),
-          },
-        );
+        res = await axios.post(API_BASE, {
+          action: "login",
+          userEmail: formData.get("usernameoremail"),
+          password: formData.get("password"),
+        });
 
         if (res.data.status === "success") {
           localStorage.setItem("user", JSON.stringify(res.data.user));
@@ -58,166 +79,305 @@ const Login = () => {
         throw new Error(res.data.message);
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Something went wrong");
+      alert(err.response?.data?.message || err.message || "Something went wrong");
     }
   };
-  return (
-    <div className="login-container">
-      <div className="header flex justify-between bg-gray-200 p-4">
-        <div className="leftHeader">
-          <div className="logo flex">
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-              alt="Logo"
-              className="w-10 mr-2"
-            />
-            <h1 className="text-2xl font-bold items-center">
-              Manage Inventory
-            </h1>
-          </div>
-        </div>
-        <div className="rightHeader flex text-center items-center">
-          <div className=" flex  items-center">
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-              alt="User Logo "
-              className="w-4 mr-2"
-            />
-            <div className="text-sm">Support</div>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col rounded-lg bg-gray-100 items-center justify-center text-center h-screen p-2">
-        <div className="w-100 h-auto ">
-          <form
-            onSubmit={onSubmitHandler}
-            method="POST"
-            action="login_registration.php"
-            className=" flex flex-col gap-2 w-full h-autoitems-center justify-center text-center "
-          >
-            {currState === "Sign Up" ? (
-              <h2 className="text-2xl font-bold">Create an Account</h2>
-            ) : (
-              <h2 className="text-2xl font-bold">Welcome Back!</h2>
-            )}
-            {currState === "Sign Up" ? (
-              <span className="text-sm text-gray-500">
-                Join the inventory management platform
-              </span>
-            ) : (
-              <span className="text-sm text-gray-500">
-                Enter your credentials to manage your stock.
-              </span>
-            )}
-            {currState === "Sign Up" ? (
-              <div className="flex flex-col gap-2 w-full h-autoitems-center justify-center text-left">
-                <label
-                  htmlFor="orgname"
-                  className="text-sm font-bold text-left"
-                >
-                  Full Name:
-                </label>
-                <input
-                  type="text"
-                  id="fname"
-                  name="fname"
-                  placeholder="John Doe"
-                  required
-                  className="h-10 rounded-md border-2 border-gray-300 w-auto p-2"
-                />
-                <label
-                  htmlFor="orgName"
-                  className="text-sm font-bold text-left "
-                >
-                  Organization Name:
-                </label>
-                <input
-                  type="text"
-                  id="orgname"
-                  name="orgname"
-                  placeholder="Organization Name"
-                  required
-                  className="h-10 rounded-md border-2 border-gray-300 w-auto p-2"
-                />
-              </div>
-            ) : null}
-            <label
-              htmlFor="usernameoremail"
-              className="text-sm font-bold text-left "
-            >
-              Email:
-            </label>
-            <input
-              type="text"
-              id="usernameoremail"
-              name="usernameoremail"
-              placeholder="Username or Email"
-              required
-              className=" h-10 rounded-md border-2 border-gray-300 w-auto p-2"
-            />
 
-            <div className="flex items-center justify-between w-full ">
-              <label htmlFor="password" className="text-sm font-bold  ">
-                Password:
-              </label>
-              {currState === "Sign Up" ? null : (
-                <div className="text-sm text-blue-500 align-left">
-                  Forgot Password?
-                </div>
-              )}
-            </div>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Password"
-              required
-              className="h-10 rounded-md border-2 border-gray-300 p-2"
-            />
-            <div className="flex gap-2">
-              <input
-                type="checkbox"
-                id="rememberme"
-                name="rememberme"
-                className="w-3 h-auto"
-              />
-              <label htmlFor="rememberme" className="text-sm ">
-                Remember this device for 30 days
-              </label>
-            </div>
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
-            >
-              {currState === "Sign Up" ? "Sign Up" : "Sign In"}
-            </button>
-            <div className="login-forget">
-              {currState === "Sign Up" ? (
-                <p className="login-toggle ">
-                  Already have an account
-                  <span
-                    onClick={() => setCurrState("Login")}
-                    className="text-blue-500 ml-1"
-                  >
-                    login here
-                  </span>
+  const handleGoogleClick = () => {
+    alert("Google sign-in is not connected yet. Use email and password for now.");
+  };
+
+  return (
+    <div className="relative flex min-h-screen flex-col bg-[#E8EBF6]">
+      <header className="w-full border-b border-gray-200 bg-white px-4 py-3.5 shadow-sm sm:px-6">
+        <div className="mx-auto max-w-7xl">
+          <h1 className="text-lg font-bold tracking-tight text-gray-900 sm:text-xl flex items-center gap-2">
+            <LuPackage /> Inventory Management
+          </h1>
+        </div>
+      </header>
+
+      <div className="flex flex-1 flex-col px-4 py-10 sm:px-6 sm:py-14">
+        <div className="mx-auto flex w-full max-w-lg flex-1 flex-col">
+          <div className="rounded-2xl border border-gray-100/80 bg-white p-6 shadow-xl shadow-gray-200/60 sm:p-8">
+            {currState === "Login" ? (
+              <>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Welcome Back
+                </h2>
+                <p className="mt-2 text-sm text-gray-500">
+                  Please enter your details to access the warehouse dashboard.
                 </p>
-              ) : (
-                <p className="login-toggle">
-                  Create a new account
-                  <span
+
+                <form onSubmit={onSubmitHandler} className="mt-8 space-y-5">
+                  <div>
+                    <label htmlFor="usernameoremail" className={labelClass}>
+                      Email or username
+                    </label>
+                    <div className={inputShell}>
+                      <HiOutlineMail
+                        className="h-5 w-5 shrink-0 text-gray-400"
+                        aria-hidden
+                      />
+                      <input
+                        id="usernameoremail"
+                        name="usernameoremail"
+                        type="text"
+                        autoComplete="username"
+                        placeholder="name@kinetic.com"
+                        required
+                        className="min-w-0 flex-1 bg-transparent placeholder:text-gray-400 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="mb-2 flex items-center justify-between gap-2">
+                      <label
+                        htmlFor="password"
+                        className={labelClass + " mb-0"}
+                      >
+                        Password
+                      </label>
+                      <button
+                        type="button"
+                        className="text-[11px] font-semibold uppercase tracking-wide text-[#3B5BDB] hover:underline"
+                      >
+                        Forgot password?
+                      </button>
+                    </div>
+                    <div className={inputShell}>
+                      <IoLockClosedOutline
+                        className="h-5 w-5 shrink-0 text-gray-400"
+                        aria-hidden
+                      />
+                      <input
+                        id="password"
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        autoComplete="current-password"
+                        placeholder="••••••••"
+                        required
+                        className="min-w-0 flex-1 bg-transparent placeholder:text-gray-400 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((v) => !v)}
+                        className="shrink-0 text-gray-400 hover:text-gray-600"
+                        aria-label={
+                          showPassword ? "Hide password" : "Show password"
+                        }
+                      >
+                        {showPassword ? (
+                          <FaEyeSlash className="h-4 w-4" />
+                        ) : (
+                          <FaEye className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  <label className="flex cursor-pointer items-center gap-2 text-sm text-gray-600">
+                    <input
+                      type="checkbox"
+                      name="rememberme"
+                      className="h-4 w-4 rounded border-gray-300 text-[#3B5BDB] focus:ring-[#3B5BDB]"
+                    />
+                    Keep me logged in
+                  </label>
+
+                  <button type="submit" className={primaryBtn}>
+                    Sign In
+                  </button>
+
+                  <SocialDivider>Or continue with</SocialDivider>
+
+                  <button
+                    type="button"
+                    onClick={handleGoogleClick}
+                    className={googleBtn}
+                  >
+                    <FcGoogle className="h-5 w-5" />
+                    Sign in with Google
+                  </button>
+                </form>
+
+                <p className="mt-8 text-center text-sm text-gray-600">
+                  New to Kinetic?{" "}
+                  <button
+                    type="button"
                     onClick={() => setCurrState("Sign Up")}
-                    className="text-blue-500 ml-1"
+                    className="font-semibold text-[#3B5BDB] hover:underline"
                   >
-                    click here
-                  </span>
+                    Create an Account
+                  </button>
                 </p>
-              )}
-            </div>
-          </form>
+              </>
+            ) : (
+              <>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Create Account
+                </h2>
+                <p className="mt-2 text-sm text-gray-500">
+                  Join the ecosystem of modern warehouse management.
+                </p>
+
+                <form onSubmit={onSubmitHandler} className="mt-8 space-y-5">
+                  <div>
+                    <label htmlFor="fname" className={labelClass}>
+                      Full name
+                    </label>
+                    <input
+                      id="fname"
+                      name="fname"
+                      type="text"
+                      placeholder="Alex Sterling"
+                      required
+                      className={plainInput}
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="signup-email" className={labelClass}>
+                      Email address
+                    </label>
+                    <div className={inputShell}>
+                      <HiOutlineMail
+                        className="h-5 w-5 shrink-0 text-gray-400"
+                        aria-hidden
+                      />
+                      <input
+                        id="signup-email"
+                        name="usernameoremail"
+                        type="email"
+                        autoComplete="email"
+                        placeholder="alex@warehouse-alpha.com"
+                        required
+                        className="min-w-0 flex-1 bg-transparent placeholder:text-gray-400 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="orgname" className={labelClass}>
+                      Organization
+                    </label>
+                    <input
+                      id="orgname"
+                      name="orgname"
+                      type="text"
+                      placeholder="Nexus Logistics Group"
+                      required
+                      className={plainInput}
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="signup-password" className={labelClass}>
+                      Password
+                    </label>
+                    <div className={inputShell}>
+                      <IoLockClosedOutline
+                        className="h-5 w-5 shrink-0 text-gray-400"
+                        aria-hidden
+                      />
+                      <input
+                        id="signup-password"
+                        name="password"
+                        type={showPassword ? "text" : "password"}
+                        autoComplete="new-password"
+                        placeholder="••••••••"
+                        required
+                        className="min-w-0 flex-1 bg-transparent placeholder:text-gray-400 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((v) => !v)}
+                        className="shrink-0 text-gray-400 hover:text-gray-600"
+                        aria-label={
+                          showPassword ? "Hide password" : "Show password"
+                        }
+                      >
+                        {showPassword ? (
+                          <FaEyeSlash className="h-4 w-4" />
+                        ) : (
+                          <FaEye className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  <label className="flex cursor-pointer items-start gap-2 text-sm text-gray-600">
+                    <input
+                      type="checkbox"
+                      name="terms"
+                      required
+                      className="mt-0.5 h-4 w-4 rounded border-gray-300 text-[#3B5BDB] focus:ring-[#3B5BDB]"
+                    />
+                    <span>
+                      I agree to the{" "}
+                      <a
+                        href="#"
+                        className="font-medium text-[#3B5BDB] hover:underline"
+                      >
+                        Terms of Service
+                      </a>{" "}
+                      and{" "}
+                      <a
+                        href="#"
+                        className="font-medium text-[#3B5BDB] hover:underline"
+                      >
+                        Privacy Policy
+                      </a>
+                      .
+                    </span>
+                  </label>
+
+                  <button type="submit" className={primaryBtn}>
+                    Create Account →
+                  </button>
+
+                  <p className="text-center text-sm text-gray-600">
+                    Already have an account?{" "}
+                    <button
+                      type="button"
+                      onClick={() => setCurrState("Login")}
+                      className="font-semibold text-[#3B5BDB] hover:underline"
+                    >
+                      Log in
+                    </button>
+                  </p>
+
+                  <SocialDivider>Social sync</SocialDivider>
+
+                  <button
+                    type="button"
+                    onClick={handleGoogleClick}
+                    className={googleBtn}
+                  >
+                    <FcGoogle className="h-5 w-5" />
+                    Google
+                  </button>
+                </form>
+              </>
+            )}
+          </div>
+
+          {currState === "Login" ? (
+            <p className="mt-auto pt-10 text-right text-[11px] font-medium uppercase tracking-wide text-gray-400">
+              V2.4.0 Stable
+              <span className="mx-2 text-gray-300">·</span>
+              Warehouse Alpha Node
+            </p>
+          ) : (
+            <p className="mt-auto pt-10 text-center text-[11px] font-medium uppercase tracking-wide text-gray-400">
+              © 2024 Inventory Management · All rights reserved
+            </p>
+          )}
         </div>
       </div>
     </div>
   );
 };
+
 export default Login;

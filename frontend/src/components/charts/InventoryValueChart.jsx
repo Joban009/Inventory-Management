@@ -1,46 +1,32 @@
 import React, { useEffect, useRef } from "react";
 import ApexCharts from "apexcharts";
 
-const StockTrendChart = () => {
+const InventoryValueChart = () => {
   const containerRef = useRef(null);
 
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
-    const lineColor = "#0D9488";
-
     const options = {
       chart: {
         type: "area",
-        height: 300,
         toolbar: { show: false },
         zoom: { enabled: false },
         fontFamily: "inherit",
-        animations: { enabled: true },
       },
-      colors: [lineColor],
-      stroke: {
-        curve: "smooth",
-        width: 3,
-        colors: [lineColor],
-        lineCap: "round",
-        show: true,
-      },
-      markers: {
-        size: 5,
-        strokeWidth: 2,
-        strokeColors: "#fff",
-        colors: [lineColor],
-        hover: { size: 7 },
-      },
+      stroke: { curve: "smooth", width: 2 },
+      colors: ["#22C55E"],
       fill: {
         type: "gradient",
         gradient: {
-          shadeIntensity: 0.8,
-          opacityFrom: 0.22,
-          opacityTo: 0.02,
-          stops: [0, 90, 100],
+          shadeIntensity: 1,
+          opacityFrom: 0.35,
+          opacityTo: 0.05,
+          colorStops: [
+            { offset: 0, color: "#22C55E", opacity: 0.35 },
+            { offset: 100, color: "#22C55E", opacity: 0.02 },
+          ],
         },
       },
       dataLabels: { enabled: false },
@@ -50,7 +36,7 @@ const StockTrendChart = () => {
         padding: { left: 8, right: 8 },
       },
       xaxis: {
-        categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        categories: ["Jan", "Feb", "Mar", "Apr", "May"],
         labels: {
           style: { colors: "#6B7280", fontSize: "11px", fontWeight: 500 },
         },
@@ -59,14 +45,18 @@ const StockTrendChart = () => {
       },
       yaxis: {
         labels: {
+          formatter: (v) => `$${(v / 1000).toFixed(0)}k`,
           style: { colors: "#6B7280", fontSize: "11px" },
         },
       },
-      tooltip: { theme: "light" },
+      tooltip: {
+        theme: "light",
+        y: { formatter: (v) => `$${v.toLocaleString()}` },
+      },
       series: [
         {
-          name: "Movement",
-          data: [120, 145, 132, 168, 155, 190, 175],
+          name: "Value",
+          data: [38200, 40100, 41500, 43800, 45200],
         },
       ],
     };
@@ -79,13 +69,7 @@ const StockTrendChart = () => {
     };
   }, []);
 
-  return (
-    <div
-      ref={containerRef}
-      className="w-full"
-      style={{ minHeight: 300 }}
-    />
-  );
+  return <div ref={containerRef} className="min-h-[280px] w-full" />;
 };
 
-export default StockTrendChart;
+export default InventoryValueChart;
