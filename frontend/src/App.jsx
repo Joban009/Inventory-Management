@@ -1,7 +1,7 @@
 
 import { Routes, Route } from "react-router-dom";
 import Login from "./components/pages/Login";
-import MainContainer from "./components/pages/main/MainContainer";
+import Maincontainer from "./components/pages/main/MainContainer";
 import Dashboard from "./components/pages/main/Dashboard";
 import Inventory from "./components/pages/main/Inventory";
 import Setting from "./components/pages/main/Setting";
@@ -13,7 +13,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route element={<MainContainer />}>
+      <Route element={<Maincontainer />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/report" element={<Report />} />
