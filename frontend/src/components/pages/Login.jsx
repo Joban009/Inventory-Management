@@ -63,14 +63,21 @@ const Login = () => {
           setCurrState("Login");
         }
       } else {
-        res = await axios.post(API_BASE, {
-          action: "login",
-          userEmail: formData.get("usernameoremail"),
-          password: formData.get("password"),
-        });
+        res = await axios.post(
+          API_BASE,
+          {
+            action: "login",
+            userEmail: formData.get("usernameoremail"),
+            password: formData.get("password"),
+          },
+          {
+            withCredentials: true, // IMPORTANT
+          },
+        );
 
         if (res.data.status === "success") {
           localStorage.setItem("user", JSON.stringify(res.data.user));
+          localStorage.setItem("isLoggedIn", "true"); // ADD THIS
           navigate("/dashboard");
         }
       }
@@ -80,6 +87,9 @@ const Login = () => {
       }
     } catch (err) {
       alert(err.response?.data?.message || err.message || "Something went wrong");
+      localStorage.removeItem("user");
+      localStorage.removeItem("isLoggedIn");  
+      navigate("/");
     }
   };
 

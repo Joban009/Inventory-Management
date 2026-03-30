@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 
-const AddItems = ({ onClose }) => {
+const AddItems = ({ onClose, onItemAdded }) => {
   const [formData, setFormData] = useState({
     name: "",
     category: "",
@@ -10,21 +10,45 @@ const AddItems = ({ onClose }) => {
     price: "",
     description: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.price) {
-      alert("Please fill in all required fields");
+      setError("Item name and price are required.");
       return;
     }
-    onClose();
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch("http://localhost/api/product.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (data.status === "success") {
+        if (onItemAdded) onItemAdded(data.product);
+        onClose();
+      } else {
+        setError(data.message || "Failed to add item.");
+      }
+    } catch (err) {
+      setError("Network error. Please check your connection.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -36,7 +60,10 @@ const AddItems = ({ onClose }) => {
     >
       <div className="w-full max-w-lg rounded-2xl border border-gray-200 bg-white shadow-xl">
         <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
-          <h2 id="create-item-title" className="text-lg font-bold text-gray-900">
+          <h2
+            id="create-item-title"
+            className="text-lg font-bold text-gray-900"
+          >
             Create New Item
           </h2>
           <button
@@ -50,10 +77,19 @@ const AddItems = ({ onClose }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="px-6 py-5">
+          {error && (
+            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-600">
+              {error}
+            </div>
+          )}
+
           <div className="space-y-4">
             <div>
-              <label htmlFor="name" className="mb-1.5 block text-xs font-bold text-gray-900">
-                Item Name
+              <label
+                htmlFor="name"
+                className="mb-1.5 block text-xs font-bold text-gray-900"
+              >
+                Item Name <span className="text-red-500">*</span>
               </label>
               <input
                 id="name"
@@ -65,8 +101,12 @@ const AddItems = ({ onClose }) => {
                 className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
+
             <div>
-              <label htmlFor="category" className="mb-1.5 block text-xs font-bold text-gray-900">
+              <label
+                htmlFor="category"
+                className="mb-1.5 block text-xs font-bold text-gray-900"
+              >
                 Category
               </label>
               <div className="relative">
@@ -88,9 +128,13 @@ const AddItems = ({ onClose }) => {
                 </span>
               </div>
             </div>
+
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label htmlFor="initial" className="mb-1.5 block text-xs font-bold text-gray-900">
+                <label
+                  htmlFor="initial"
+                  className="mb-1.5 block text-xs font-bold text-gray-900"
+                >
                   Initial Stock
                 </label>
                 <input
@@ -105,11 +149,16 @@ const AddItems = ({ onClose }) => {
                 />
               </div>
               <div>
-                <label htmlFor="price" className="mb-1.5 block text-xs font-bold text-gray-900">
-                  Price
+                <label
+                  htmlFor="price"
+                  className="mb-1.5 block text-xs font-bold text-gray-900"
+                >
+                  Price <span className="text-red-500">*</span>
                 </label>
                 <div className="relative flex items-center">
-                  <span className="pointer-events-none absolute left-3 text-sm font-medium text-gray-500">$</span>
+                  <span className="pointer-events-none absolute left-3 text-sm font-medium text-gray-500">
+                    $
+                  </span>
                   <input
                     id="price"
                     type="number"
@@ -124,8 +173,12 @@ const AddItems = ({ onClose }) => {
                 </div>
               </div>
             </div>
+
             <div>
-              <label htmlFor="description" className="mb-1.5 block text-xs font-bold text-gray-900">
+              <label
+                htmlFor="description"
+                className="mb-1.5 block text-xs font-bold text-gray-900"
+              >
                 Description
               </label>
               <textarea
@@ -144,19 +197,48 @@ const AddItems = ({ onClose }) => {
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50"
+              disabled={loading}
+              className="rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-95"
+              disabled={loading}
+              className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-95 disabled:opacity-60"
               style={{ backgroundColor: "#1D72E7" }}
             >
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20">
-                <IoMdAdd className="h-4 w-4" />
-              </span>
-              Save Item
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <svg
+                    className="h-4 w-4 animate-spin"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    />
+                  </svg>
+                  Saving...
+                </span>
+              ) : (
+                <>
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/20">
+                    <IoMdAdd className="h-4 w-4" />
+                  </span>
+                  Save Item
+                </>
+              )}
             </button>
           </div>
         </form>

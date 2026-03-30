@@ -7,13 +7,21 @@ import Inventory from "./components/pages/main/Inventory";
 import Setting from "./components/pages/main/Setting";
 import Report from "./components/pages/main/Report";
 import Supplier from "./components/pages/main/Supplier";
+import ProtectedRoute from "./ProtectedRoute";
 import "./App.css";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
-      <Route element={<Maincontainer />}>
+
+      <Route
+        element={
+          <ProtectedRoute>
+            <Maincontainer />
+          </ProtectedRoute>
+        }
+      >
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/report" element={<Report />} />
