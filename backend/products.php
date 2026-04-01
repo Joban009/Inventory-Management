@@ -10,13 +10,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+
+
 require_once 'config.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'GET') {
     // Fetch all products
-    $result = $conn->query("SELECT * FROM products ORDER BY created_at DESC");
+    $result = $conn->query("SELECT * FROM products ORDER BY id DESC");
 
     if (!$result) {
         http_response_code(500);
@@ -35,11 +37,19 @@ if ($method === 'GET') {
     // Add a new product
     $data = json_decode(file_get_contents("php://input"), true);
 
-    $name        = trim($data['name'] ?? '');
-    $category    = trim($data['category'] ?? '');
-    $stock       = intval($data['initial'] ?? 0);
-    $price       = floatval($data['price'] ?? 0);
-    $description = trim($data['description'] ?? '');
+if (!$data) {
+    echo json_encode([
+        "status" => "error",
+        "message" => "No data received"
+    ]);
+    exit;
+}
+
+$name = $data['name'];
+$category = $data['category'];
+$price = $data['price'];
+$stock = $data['stock'];
+$description = $data['description'];
 
     if ($name === '' || $price <= 0) {
         http_response_code(400);
@@ -48,13 +58,28 @@ if ($method === 'GET') {
     }
 
     // Auto-generate SKU: e.g. ELEC-00042
-    $prefix = strtoupper(substr($category ?: 'ITEM', 0, 4));
-    $sku = $prefix . '-' . str_pad(rand(1, 99999), 5, '0', STR_PAD_LEFT);
+    // Auto-generate UNIQUE SKU
+$prefix = strtoupper(substr($category ?: 'ITEM', 0, 4));
+
+do {
+    $randomNumber = random_int(10000, 99999);
+    $sku = $prefix . '-' . $randomNumber;
+
+    // check if SKU already exists
+    $check = $conn->prepare("SELECT id FROM products WHERE sku = ?");
+    $check->bind_param("s", $sku);
+    $check->execute();
+    $check->store_result();
+
+    $exists = $check->num_rows > 0;
+    $check->close();
+
+} while ($exists);
 
     $stmt = $conn->prepare(
-        "INSERT INTO products (name, sku, category, stock, price, description) VALUES (?, ?, ?, ?, ?, ?)"
+        "INSERT INTO products (name, sku, category, price, stock, description) VALUES (?, ?, ?, ?, ?, ?)"
     );
-    $stmt->bind_param("sssids", $name, $sku, $category, $stock, $price, $description);
+    $stmt->bind_param("sssids", $name, $sku, $category, $price, $stock, $description);
 
     if ($stmt->execute()) {
         $newId = $stmt->insert_id;
@@ -66,9 +91,9 @@ if ($method === 'GET') {
                 "name"        => $name,
                 "sku"         => $sku,
                 "category"    => $category,
-                "stock"       => $stock,
                 "price"       => $price,
-                "description" => $description,
+                "stock"       => $stock,
+                "description" => $description, 
             ]
         ]);
     } else {

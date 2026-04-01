@@ -1,51 +1,60 @@
 import React, { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
+import axios from "axios";
 
 const AddItems = ({ onClose, onItemAdded }) => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     category: "",
-    initial: "",
     price: "",
+    stock: "",
     description: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError("");
+  const [items, setItems] = useState([]);
+
+  const handelChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
-  const handleSubmit = async (e) => {
+  const handelSubmit = async (e) => {
     e.preventDefault();
+
     if (!formData.name || !formData.price) {
-      setError("Item name and price are required.");
+      alert("Please fill in all required fields");
       return;
     }
 
     setLoading(true);
-    setError("");
 
     try {
-      const res = await fetch("http://localhost/api/product.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(formData),
+      const res = await axios.post("/backend/products.php", formData, {
+        withCredentials: true,
       });
 
-      const data = await res.json();
+      console.log(res.data);
+      alert("Data submitted successfully!");
 
-      if (data.status === "success") {
-        if (onItemAdded) onItemAdded(data.product);
-        onClose();
-      } else {
-        setError(data.message || "Failed to add item.");
-      }
-    } catch (err) {
-      setError("Network error. Please check your connection.");
+      setFormData({
+        name: "",
+        category: "",
+        price: "",
+        stock: "",
+        description: "",
+      });
+
+      onItemAdded && onItemAdded();
+      onClose(); // optional
+    } catch (error) {
+      console.error(error);
+      alert("Error submitting data");
     } finally {
       setLoading(false);
     }
@@ -76,12 +85,8 @@ const AddItems = ({ onClose, onItemAdded }) => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="px-6 py-5">
-          {error && (
-            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-600">
-              {error}
-            </div>
-          )}
+        <form onSubmit={handelSubmit} className="px-6 py-5">
+          {/* <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-600"></div> */}
 
           <div className="space-y-4">
             <div>
@@ -96,7 +101,7 @@ const AddItems = ({ onClose, onItemAdded }) => {
                 type="text"
                 name="name"
                 placeholder="e.g., Wireless Mechanical Keyboard"
-                onChange={handleChange}
+                onChange={handelChange}
                 value={formData.name}
                 className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               />
@@ -113,7 +118,7 @@ const AddItems = ({ onClose, onItemAdded }) => {
                 <select
                   id="category"
                   name="category"
-                  onChange={handleChange}
+                  onChange={handelChange}
                   value={formData.category}
                   className="w-full appearance-none rounded-lg border border-gray-200 bg-white px-3 py-2.5 pr-10 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 >
@@ -132,19 +137,19 @@ const AddItems = ({ onClose, onItemAdded }) => {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <label
-                  htmlFor="initial"
+                  htmlFor="stock"
                   className="mb-1.5 block text-xs font-bold text-gray-900"
                 >
                   Initial Stock
                 </label>
                 <input
-                  id="initial"
+                  id="stock"
                   type="number"
-                  name="initial"
+                  name="stock"
                   placeholder="0"
                   min={0}
-                  onChange={handleChange}
-                  value={formData.initial}
+                  onChange={handelChange}
+                  value={formData.stock}
                   className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
@@ -166,7 +171,7 @@ const AddItems = ({ onClose, onItemAdded }) => {
                     placeholder="0.00"
                     step="0.01"
                     min={0}
-                    onChange={handleChange}
+                    onChange={handelChange}
                     value={formData.price}
                     className="w-full rounded-lg border border-gray-200 py-2.5 pl-7 pr-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                   />
@@ -186,7 +191,7 @@ const AddItems = ({ onClose, onItemAdded }) => {
                 name="description"
                 rows={4}
                 placeholder="Provide details about the item's specifications, condition, or storage requirements..."
-                onChange={handleChange}
+                onChange={handelChange}
                 value={formData.description}
                 className="w-full resize-y rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               />

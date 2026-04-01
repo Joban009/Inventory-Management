@@ -8,8 +8,8 @@ export default defineConfig({
 
   server: {
     proxy: {
-      "/api": {
-        target: "http://localhost",
+      "/backend": {
+        target: "http://localhost/Inventory_Management/InventoryMGT",
         changeOrigin: true,
       },
     },
