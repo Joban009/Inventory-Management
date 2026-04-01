@@ -77,7 +77,7 @@ do {
 } while ($exists);
 
     $stmt = $conn->prepare(
-        "INSERT INTO products (name, sku, category, price, stock, description) VALUES (?, ?, ?, ?, ?, ?)"
+        "INSERT INTO products (name, sku, category, price, stock, description, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())"
     );
     $stmt->bind_param("sssids", $name, $sku, $category, $price, $stock, $description);
 

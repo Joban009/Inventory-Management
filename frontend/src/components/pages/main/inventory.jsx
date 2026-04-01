@@ -26,7 +26,7 @@ const catClassMap = {
   accessories: "bg-green-50 text-green-700 ring-green-700/10",
 };
 
-const StockCell = ({ label, pct, barClass }) => {
+const StockCell = ({ label, pct, barClass, quantity }) => {
   const labelClass =
     label === "Good"
       ? "text-emerald-600"
@@ -35,7 +35,10 @@ const StockCell = ({ label, pct, barClass }) => {
       : "text-red-600";
   return (
     <div className="min-w-30">
-      <p className={`text-xs font-semibold ${labelClass}`}>{label}</p>
+      <div className="flex items-center justify-between">
+        <p className={`text-xs font-semibold ${labelClass}`}>{label}</p>
+        <p className="text-xs font-semibold text-gray-700">{quantity}</p>
+      </div>
       <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
         <div
           className={`h-full rounded-full ${barClass}`}
@@ -60,7 +63,7 @@ const Inventory = () => {
     setError("");
     try {
       const res = await fetch(
-        "/backend/products.php",
+        "http://localhost/Inventory_Management/InventoryMGT/backend/products.php",
         {
           credentials: "include",
         },
@@ -250,6 +253,7 @@ const Inventory = () => {
                             label={row.stockLabel}
                             pct={row.stockPct}
                             barClass={row.barClass}
+                            quantity={Number(row.stock)}
                           />
                         </td>
                         <td className="px-5 py-4 font-semibold text-gray-900">

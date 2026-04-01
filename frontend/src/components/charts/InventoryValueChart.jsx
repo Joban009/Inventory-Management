@@ -1,12 +1,42 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ApexCharts from "apexcharts";
 
 const InventoryValueChart = () => {
   const containerRef = useRef(null);
+  const chartRef = useRef(null);
+  const [range, setRange] = useState(30);
+  const [chartData, setChartData] = useState({ categories: [], values: [] });
+
+  useEffect(() => {
+    const fetchChartData = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost/Inventory_Management/InventoryMGT/backend/inventory_value.php?range=${range}`,
+          {
+            credentials: "include",
+          },
+        );
+        const json = await res.json();
+        if (json.status === "success") {
+          const categories = json.data.map((r) => r.day);
+          const values = json.data.map((r) => r.inventory_value);
+          setChartData({ categories, values });
+        }
+      } catch (err) {
+        console.error("Error loading chart data", err);
+      }
+    };
+
+    fetchChartData();
+  }, [range]);
 
   useEffect(() => {
     const el = containerRef.current;
-    if (!el) return;
+    if (!el || chartData.categories.length === 0) return;
+
+    if (chartRef.current) {
+      chartRef.current.destroy();
+    }
 
     const options = {
       chart: {
@@ -36,7 +66,7 @@ const InventoryValueChart = () => {
         padding: { left: 8, right: 8 },
       },
       xaxis: {
-        categories: ["Jan", "Feb", "Mar", "Apr", "May"],
+        categories: chartData.categories,
         labels: {
           style: { colors: "#6B7280", fontSize: "11px", fontWeight: 500 },
         },
@@ -55,21 +85,43 @@ const InventoryValueChart = () => {
       },
       series: [
         {
-          name: "Value",
-          data: [38200, 40100, 41500, 43800, 45200],
+          name: "Inventory Value",
+          data: chartData.values,
         },
       ],
     };
 
-    const chart = new ApexCharts(el, options);
-    chart.render();
+    chartRef.current = new ApexCharts(el, options);
+    chartRef.current.render();
 
     return () => {
-      chart.destroy();
+      if (chartRef.current) {
+        chartRef.current.destroy();
+      }
     };
-  }, []);
+  }, [chartData]);
 
-  return <div ref={containerRef} className="min-h-[280px] w-full" />;
+  return (
+    <div>
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        {[7, 30, 90].map((value) => (
+          <button
+            key={value}
+            type="button"
+            onClick={() => setRange(value)}
+            className={`rounded-md px-3 py-1.5 text-xs font-semibold ${
+              range === value
+                ? "bg-blue-600 text-white"
+                : "border border-gray-200 bg-white text-gray-700 hover:bg-gray-100"
+            }`}
+          >
+            Last {value} Days
+          </button>
+        ))}
+      </div>
+      <div ref={containerRef} className="min-h-70 w-full" />
+    </div>
+  );
 };
 
 export default InventoryValueChart;

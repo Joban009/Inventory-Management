@@ -1,12 +1,40 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ApexCharts from "apexcharts";
 
 const StockByCat = () => {
   const containerRef = useRef(null);
+  const chartRef = useRef(null);
+  const [chartData, setChartData] = useState({ categories: [], stocks: [] });
+
+  useEffect(() => {
+    const fetchChartData = async () => {
+      try {
+        const res = await fetch(
+          "http://localhost/Inventory_Management/InventoryMGT/backend/stock_by_category.php",
+          {
+            credentials: "include",
+          },
+        );
+        const json = await res.json();
+        console.log("Stock by category data:", json);
+        if (json.status === "success") {
+          setChartData({ categories: json.categories, stocks: json.stocks });
+        }
+      } catch (err) {
+        console.error("Error loading stock by category chart", err);
+      }
+    };
+
+    fetchChartData();
+  }, []);
 
   useEffect(() => {
     const el = containerRef.current;
-    if (!el) return;
+    if (!el || chartData.categories.length === 0) return;
+
+    if (chartRef.current) {
+      chartRef.current.destroy();
+    }
 
     const options = {
       chart: {
@@ -29,7 +57,7 @@ const StockByCat = () => {
         padding: { top: 8, left: 8, right: 8 },
       },
       xaxis: {
-        categories: ["ELECTRONICS", "FURNITURE", "APPAREL", "ACCESSORIES", "OTHER"],
+        categories: chartData.categories,
         labels: {
           style: { colors: "#6B7280", fontSize: "10px", fontWeight: 600 },
         },
@@ -45,18 +73,20 @@ const StockByCat = () => {
       series: [
         {
           name: "Units",
-          data: [420, 280, 190, 150, 95],
+          data: chartData.stocks,
         },
       ],
     };
 
-    const chart = new ApexCharts(el, options);
-    chart.render();
+    chartRef.current = new ApexCharts(el, options);
+    chartRef.current.render();
 
     return () => {
-      chart.destroy();
+      if (chartRef.current) {
+        chartRef.current.destroy();
+      }
     };
-  }, []);
+  }, [chartData]);
 
   return <div ref={containerRef} className="min-h-[280px] w-full" />;
 };

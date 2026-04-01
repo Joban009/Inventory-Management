@@ -1,12 +1,40 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ApexCharts from "apexcharts";
 
 const StockTrendChart = () => {
   const containerRef = useRef(null);
+  const chartRef = useRef(null);
+  const [chartData, setChartData] = useState({ days: [], stocks: [] });
+
+  useEffect(() => {
+    const fetchChartData = async () => {
+      try {
+        const res = await fetch(
+          "http://localhost/Inventory_Management/InventoryMGT/backend/stock_trend.php",
+          {
+            credentials: "include",
+          },
+        );
+        const json = await res.json();
+        console.log("Stock trend data:", json);
+        if (json.status === "success") {
+          setChartData({ days: json.days, stocks: json.stocks });
+        }
+      } catch (err) {
+        console.error("Error loading stock trend chart", err);
+      }
+    };
+
+    fetchChartData();
+  }, []);
 
   useEffect(() => {
     const el = containerRef.current;
-    if (!el) return;
+    if (!el || chartData.days.length === 0) return;
+
+    if (chartRef.current) {
+      chartRef.current.destroy();
+    }
 
     const lineColor = "#0D9488";
 
@@ -50,7 +78,7 @@ const StockTrendChart = () => {
         padding: { left: 8, right: 8 },
       },
       xaxis: {
-        categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        categories: chartData.days,
         labels: {
           style: { colors: "#6B7280", fontSize: "11px", fontWeight: 500 },
         },
@@ -66,25 +94,23 @@ const StockTrendChart = () => {
       series: [
         {
           name: "Movement",
-          data: [120, 145, 132, 168, 155, 190, 175],
+          data: chartData.stocks,
         },
       ],
     };
 
-    const chart = new ApexCharts(el, options);
-    chart.render();
+    chartRef.current = new ApexCharts(el, options);
+    chartRef.current.render();
 
     return () => {
-      chart.destroy();
+      if (chartRef.current) {
+        chartRef.current.destroy();
+      }
     };
-  }, []);
+  }, [chartData]);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full"
-      style={{ minHeight: 300 }}
-    />
+    <div ref={containerRef} className="w-full" style={{ minHeight: 300 }} />
   );
 };
 

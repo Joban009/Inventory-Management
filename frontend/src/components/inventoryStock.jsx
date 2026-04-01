@@ -41,7 +41,9 @@ const InventoryStock = ({ variant = "dashboard" }) => {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch("/backend/products.php");
+      const response = await fetch(
+        "http://localhost/Inventory_Management/InventoryMGT/backend/products.php",
+      );
       const data = await response.json();
       console.log("API Response:", data);
       if (data.status === "success") {

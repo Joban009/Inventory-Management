@@ -35,9 +35,13 @@ const AddItems = ({ onClose, onItemAdded }) => {
     setLoading(true);
 
     try {
-      const res = await axios.post("/backend/products.php", formData, {
-        withCredentials: true,
-      });
+      const res = await axios.post(
+        "http://localhost/Inventory_Management/InventoryMGT/backend/products.php",
+        formData,
+        {
+          withCredentials: true,
+        },
+      );
 
       console.log(res.data);
       alert("Data submitted successfully!");
