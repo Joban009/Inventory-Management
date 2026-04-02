@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import ApexCharts from "apexcharts";
 
-const StockTrendChart = () => {
+const StockTrendChart = ({ days = "7" }) => {
   const containerRef = useRef(null);
   const chartRef = useRef(null);
   const [chartData, setChartData] = useState({ days: [], stocks: [] });
@@ -10,7 +10,7 @@ const StockTrendChart = () => {
     const fetchChartData = async () => {
       try {
         const res = await fetch(
-          "http://localhost/Inventory_Management/InventoryMGT/backend/stock_trend.php",
+          `/backend/analytics/stock_trend.php?days=${days}`,
           {
             credentials: "include",
           },
@@ -26,7 +26,7 @@ const StockTrendChart = () => {
     };
 
     fetchChartData();
-  }, []);
+  }, [days]);
 
   useEffect(() => {
     const el = containerRef.current;

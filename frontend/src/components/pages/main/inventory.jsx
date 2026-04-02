@@ -4,9 +4,9 @@ import { IoIosAdd } from "react-icons/io";
 import { MdFilterList } from "react-icons/md";
 import { MdOutlineRotateLeft } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import AddItems from "../../AddItems";
-import Navbar from "../../Navbar";
-import InventoryStick from "../../InventoryStock";
+import AddItems from "../../forms/AddItems";
+import Navbar from "../../common/Navbar";
+import InventoryStock from "../../common/InventoryStock";
 import { getIconForCategory } from "../../../data/inventoryProductIcons";
 
 // Derive stock label/bar styling from a stock count
@@ -57,17 +57,16 @@ const Inventory = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [page, setPage] = useState(1);
+  const [showFilter, setShowFilter] = useState(false);
+  const [rowMenu, setRowMenu] = useState(null);
 
   const fetchProducts = async () => {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(
-        "http://localhost/Inventory_Management/InventoryMGT/backend/products.php",
-        {
-          credentials: "include",
-        },
-      );
+      const res = await fetch("/backend/inventory/products.php", {
+        credentials: "include",
+      });
       const data = await res.json();
       if (data.status === "success") {
         setProducts(data.products);
@@ -84,6 +83,27 @@ const Inventory = () => {
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  const handleExport = () => {
+    window.location.href =
+      "/backend/settings/export_data.php?format=csv&type=products";
+  };
+
+  const handleRowAction = (rowSku, action) => {
+    if (action === "edit") {
+      // TODO: Navigate to edit page or open edit modal
+      console.log("Edit product:", rowSku);
+    } else if (action === "delete") {
+      if (window.confirm("Are you sure you want to delete this product?")) {
+        // TODO: Call delete API endpoint
+        console.log("Delete product:", rowSku);
+      }
+    } else if (action === "details") {
+      // TODO: Navigate to product details page
+      console.log("View details:", rowSku);
+    }
+    setRowMenu(null);
+  };
 
   // Map raw DB rows → display rows
   const rows = (products || []).filter(Boolean).map((p) => {
@@ -133,6 +153,7 @@ const Inventory = () => {
           <div className="flex flex-wrap items-center gap-3">
             <button
               type="button"
+              onClick={handleExport}
               className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50"
             >
               <MdDownload className="h-5 w-5 text-gray-500" />
@@ -150,7 +171,7 @@ const Inventory = () => {
         </div>
 
         <div className="mb-6">
-          <InventoryStick variant="inventory" />
+          <InventoryStock variant="inventory" />
         </div>
 
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
@@ -159,6 +180,7 @@ const Inventory = () => {
             <div className="flex items-center gap-1 text-gray-500">
               <button
                 type="button"
+                onClick={() => setShowFilter(!showFilter)}
                 className="rounded-lg p-2 transition-colors hover:bg-gray-100 hover:text-gray-800"
                 aria-label="Filter"
               >
@@ -260,13 +282,49 @@ const Inventory = () => {
                           {row.price}
                         </td>
                         <td className="px-5 py-4">
-                          <button
-                            type="button"
-                            className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
-                            aria-label="Row actions"
-                          >
-                            <BsThreeDotsVertical className="h-5 w-5" />
-                          </button>
+                          <div className="relative">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setRowMenu(rowMenu === row.sku ? null : row.sku)
+                              }
+                              className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
+                              aria-label="Row actions"
+                            >
+                              <BsThreeDotsVertical className="h-5 w-5" />
+                            </button>
+                            {rowMenu === row.sku && (
+                              <div className="absolute right-0 z-10 rounded-lg border border-gray-200 bg-white shadow-lg">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleRowAction(row.sku, "details")
+                                  }
+                                  className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 first:rounded-t-lg"
+                                >
+                                  View Details
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleRowAction(row.sku, "edit")
+                                  }
+                                  className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50"
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleRowAction(row.sku, "delete")
+                                  }
+                                  className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 last:rounded-b-lg"
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     );

@@ -9,12 +9,9 @@ const StockByCat = () => {
   useEffect(() => {
     const fetchChartData = async () => {
       try {
-        const res = await fetch(
-          "http://localhost/Inventory_Management/InventoryMGT/backend/stock_by_category.php",
-          {
-            credentials: "include",
-          },
-        );
+        const res = await fetch("/backend/stock_by_category.php", {
+          credentials: "include",
+        });
         const json = await res.json();
         console.log("Stock by category data:", json);
         if (json.status === "success") {

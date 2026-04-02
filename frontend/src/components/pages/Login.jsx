@@ -7,13 +7,13 @@ import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import { LuPackage } from "react-icons/lu";
 
-const API_BASE =
-  "http://localhost/Inventory_Management/InventoryMGT/backend/login_registration.php";
+const API_BASE = "/backend/login_registration.php";
 
 const inputShell =
   "flex w-full items-center gap-3 rounded-xl border border-transparent bg-[#F3F4FF] px-4 py-3 text-sm text-gray-900 outline-none transition focus-within:border-indigo-200 focus-within:ring-2 focus-within:ring-indigo-100";
 
-const labelClass = "mb-2 block text-[11px] font-semibold uppercase tracking-wide text-gray-600";
+const labelClass =
+  "mb-2 block text-[11px] font-semibold uppercase tracking-wide text-gray-600";
 
 const primaryBtn =
   "w-full rounded-xl bg-[#3B5BDB] py-3.5 text-center text-sm font-semibold text-white shadow-sm transition hover:bg-[#2F4AC4] active:scale-[0.99]";
@@ -86,15 +86,19 @@ const Login = () => {
         throw new Error(res.data.message);
       }
     } catch (err) {
-      alert(err.response?.data?.message || err.message || "Something went wrong");
+      alert(
+        err.response?.data?.message || err.message || "Something went wrong",
+      );
       localStorage.removeItem("user");
-      localStorage.removeItem("isLoggedIn");  
+      localStorage.removeItem("isLoggedIn");
       navigate("/");
     }
   };
 
   const handleGoogleClick = () => {
-    alert("Google sign-in is not connected yet. Use email and password for now.");
+    alert(
+      "Google sign-in is not connected yet. Use email and password for now.",
+    );
   };
 
   return (
@@ -133,7 +137,6 @@ const Login = () => {
                         id="usernameoremail"
                         name="usernameoremail"
                         type="text"
-                        autoComplete="username"
                         placeholder="name@kinetic.com"
                         required
                         className="min-w-0 flex-1 bg-transparent placeholder:text-gray-400 focus:outline-none"

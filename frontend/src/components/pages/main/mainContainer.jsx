@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import LeftSideBar from "./leftSideBar";
-import Footer from "../../Footer";
+import LeftSideBar from "../../common/LeftSideBar";
+import Footer from "../../common/Footer";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -10,17 +10,18 @@ const MainContainer = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get("http://localhost/Inventory_Management/InventoryMGT/backend/auth_check.php", {
-      withCredentials: true
-    })
-    .then(res => {
-      if (res.data.status !== "success") {
+    axios
+      .get("/backend/auth_check.php", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.status !== "success") {
+          navigate("/");
+        }
+      })
+      .catch(() => {
         navigate("/");
-      }
-    })
-    .catch(() => {
-      navigate("/");
-    });
+      });
   }, []);
   return (
     <div className="flex min-h-screen bg-slate-50">

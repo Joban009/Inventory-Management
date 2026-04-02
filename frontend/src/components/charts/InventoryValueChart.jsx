@@ -10,12 +10,9 @@ const InventoryValueChart = () => {
   useEffect(() => {
     const fetchChartData = async () => {
       try {
-        const res = await fetch(
-          `http://localhost/Inventory_Management/InventoryMGT/backend/inventory_value.php?range=${range}`,
-          {
-            credentials: "include",
-          },
-        );
+        const res = await fetch(`/backend/inventory_value.php?range=${range}`, {
+          credentials: "include",
+        });
         const json = await res.json();
         if (json.status === "success") {
           const categories = json.data.map((r) => r.day);
