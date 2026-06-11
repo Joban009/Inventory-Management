@@ -3,8 +3,10 @@
  * Centralized settings and constants
  */
 
-export const API_BASE_URL =
-  "http://localhost/Inventory_Management/InventoryMGT/backend";
+  // frontend/src/constants/config.js
+
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL 
+  || 'http://localhost/Inventory_Management/InventoryMGT/backend';
 
 export const API_ENDPOINTS = {
   // Auth

@@ -158,7 +158,9 @@ const Setting = () => {
 
   const handleExportCSV = async () => {
     try {
-      window.location.href = "/backend/settings/export_data.php?format=csv";
+      window.location.href = `${
+        import.meta.env.VITE_API_BASE_URL
+      }/settings/export_data.php?format=csv`;
     } catch (err) {
       console.error("Error exporting CSV:", err);
       setError("Failed to export CSV");
