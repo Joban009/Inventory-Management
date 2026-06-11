@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Login from "./components/pages/Login";
-import Maincontainer from "./components/pages/main/MainContainer";
+import MainContainer from "./components/pages/main/MainContainer";
 import Dashboard from "./components/pages/main/Dashboard";
 import Inventory from "./components/pages/main/Inventory";
 import Setting from "./components/pages/main/Setting";
