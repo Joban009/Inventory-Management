@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../../common/Navbar";
 import InventoryStock from "../../common/InventoryStock";
 import StockTrendChart from "../../charts/StockTrendChart";
+import apiClient from "../../../services/api.js";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { IoWarningOutline } from "react-icons/io5";
 import { MdSync } from "react-icons/md";
@@ -58,7 +59,7 @@ const Dashboard = () => {
     const fetchActivities = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("/backend/analytics/activity.php");
+        const response = await apiClient.get("/activity.php");
         if (response.data?.status === "success") {
           setActivities(response.data.activities || defaultActivities);
         } else {
