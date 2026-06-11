@@ -198,9 +198,11 @@ src/components/pages/
 │   └── Routes: [/]
 │   └── Components: Email/password form, login/register toggle
 │
-└── main/                         # Main protected pages (wrapped with MainContainer)
+└── main/                         # Main protected pages (wrapped with MainContainer
+)
     │
-    ├── MainContainer.jsx         # Layout wrapper with sidebar & navbar
+    ├── MainContainer
+.jsx         # Layout wrapper with sidebar & navbar
     │   └── Routes all nested pages
     │   └── Components: LeftSideBar, Navbar, Footer
     │
@@ -275,7 +277,8 @@ App (Router)
 └── Login.jsx
 │   └── [/] Route
 │
-└── MainContainer (Protected)
+└── MainContainer
+ (Protected)
     └── Header
     │   └── Navbar.jsx
     │
@@ -739,7 +742,8 @@ DATABASE_SETUP.sql  - Schema & initial data
 │                  FRONTEND (React)                            │
 │                                                              │
 │  ├─ App.jsx (Router)                                        │
-│  ├─ MainContainer (Layout)                                  │
+│  ├─ MainContainer
+ (Layout)                                  │
 │  │  ├─ Navbar                                               │
 │  │  ├─ LeftSideBar (Menu)                                   │
 │  │  ├─ Main Content Pages:                                  │
@@ -826,7 +830,8 @@ DATABASE_SETUP.sql  - Schema & initial data
 - [x] Navbar.jsx
 - [x] Footer.jsx
 - [x] LeftSideBar.jsx
-- [x] MainContainer.jsx
+- [x] MainContainer
+      .jsx
 - [x] Login.jsx
 - [x] Dashboard.jsx
 - [x] Inventory.jsx

@@ -29,7 +29,8 @@ frontend/src/
 │   └── 📁 pages/                # Page components
 │       ├── Login.jsx             # Auth page
 │       └── 📁 main/             # Protected pages
-│           ├── MainContainer.jsx # Layout wrapper
+│           ├── MainContainer
+.jsx # Layout wrapper
 │           ├── Dashboard.jsx     # Overview page
 │           ├── Inventory.jsx     # Product management
 │           ├── Supplier.jsx      # Supplier management
@@ -143,7 +144,8 @@ Copy these to `components/forms/`:
 
 Update imports in `components/pages/main/`:
 
-- MainContainer.jsx
+- MainContainer
+  .jsx
 - Dashboard.jsx
 - Inventory.jsx
 - Supplier.jsx

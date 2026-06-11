@@ -81,7 +81,8 @@ frontend/src/
 │           ├── Dashboard.jsx
 │           ├── Inventory.jsx
 │           ├── LeftSideBar.jsx (moved to common/)
-│           ├── MainContainer.jsx
+│           ├── MainContainer
+.jsx
 │           ├── Report.jsx
 │           ├── Setting.jsx
 │           └── Supplier.jsx
@@ -127,15 +128,17 @@ frontend/src/
 
 ### Import Path Updates
 
-| File              | Changes                          | Status     |
-| ----------------- | -------------------------------- | ---------- |
-| Dashboard.jsx     | Navbar, InventoryStock           | ✅ Updated |
-| Inventory.jsx     | AddItems, Navbar, InventoryStock | ✅ Updated |
-| Report.jsx        | Navbar                           | ✅ Updated |
-| Supplier.jsx      | Navbar                           | ✅ Updated |
-| MainContainer.jsx | LeftSideBar, Footer              | ✅ Updated |
-| App.jsx           | AddSupplier                      | ✅ Updated |
-| Router            | Subdirectory support             | ✅ Updated |
+| File          | Changes                          | Status     |
+| ------------- | -------------------------------- | ---------- |
+| Dashboard.jsx | Navbar, InventoryStock           | ✅ Updated |
+| Inventory.jsx | AddItems, Navbar, InventoryStock | ✅ Updated |
+| Report.jsx    | Navbar                           | ✅ Updated |
+| Supplier.jsx  | Navbar                           | ✅ Updated |
+
+| MainContainer
+.jsx | LeftSideBar, Footer | ✅ Updated |
+| App.jsx | AddSupplier | ✅ Updated |
+| Router | Subdirectory support | ✅ Updated |
 
 ### Typos Fixed
 
