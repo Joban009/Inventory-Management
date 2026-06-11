@@ -7,7 +7,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import { LuPackage } from "react-icons/lu";
 
-const API_BASE = "/backend/login_registration.php";
+const API_BASE = "/backend/auth/login_registration.php";
 
 const inputShell =
   "flex w-full items-center gap-3 rounded-xl border border-transparent bg-[#F3F4FF] px-4 py-3 text-sm text-gray-900 outline-none transition focus-within:border-indigo-200 focus-within:ring-2 focus-within:ring-indigo-100";

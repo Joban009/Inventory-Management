@@ -425,7 +425,7 @@ export_import_log (Audit Trail)
 
 ```
 Login.jsx
-  → POST /backend/login_registration.php (email, password)
+  → POST /backend/auth/login_registration.php (email, password)
   → Response: {status, message, user_id, session}
   → Stores session cookie for subsequent requests
 ```

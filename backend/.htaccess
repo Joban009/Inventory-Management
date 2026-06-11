@@ -1,9 +1,32 @@
-SetEnvIf Origin "https://your-app.vercel.app" CORS_ORIGIN=$0
-SetEnvIf Origin "http://localhost:5173" CORS_ORIGIN=$0
-Header always set Access-Control-Allow-Origin "%{CORS_ORIGIN}e" env=CORS_ORIGIN
-Header always set Access-Control-Allow-Credentials "true"
-Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
-Header always set Access-Control-Allow-Headers "Content-Type, Authorization"
+Options -Indexes
+DirectoryIndex index.php
+
+# ─── Enable Rewrite Engine ────────────────────────────────────────────────────
 RewriteEngine On
+
+# ─── Handle OPTIONS preflight FIRST (before anything else) ───────────────────
 RewriteCond %{REQUEST_METHOD} OPTIONS
 RewriteRule ^(.*)$ $1 [R=200,L]
+
+# ─── CORS — add your actual domains here ─────────────────────────────────────
+SetEnvIf Origin "https://www.joban.com.np"   CORS_ORIGIN=$0
+SetEnvIf Origin "https://joban.com.np"       CORS_ORIGIN=$0
+SetEnvIf Origin "http://localhost:5173"      CORS_ORIGIN=$0
+SetEnvIf Origin "http://localhost:3000"      CORS_ORIGIN=$0
+
+Header always set Access-Control-Allow-Origin    "%{CORS_ORIGIN}e" env=CORS_ORIGIN
+Header always set Access-Control-Allow-Credentials "true"
+Header always set Access-Control-Allow-Methods  "GET, POST, PUT, DELETE, OPTIONS"
+Header always set Access-Control-Allow-Headers  "Content-Type, Authorization, X-Requested-With"
+
+# ─── Explicitly allow all HTTP methods to PHP files ──────────────────────────
+<FilesMatch "\.php$">
+    <LimitExcept GET POST PUT DELETE OPTIONS PATCH>
+        Require all granted
+    </LimitExcept>
+</FilesMatch>
+
+# ─── Make sure PHP files are executed (not downloaded) ───────────────────────
+<FilesMatch "\.php$">
+    SetHandler application/x-httpd-php
+</FilesMatch>

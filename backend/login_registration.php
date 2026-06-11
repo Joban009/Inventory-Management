@@ -1,16 +1,26 @@
 <?php
+// ✅ CORS and session cookies MUST be set before anything else
+ini_set('session.cookie_samesite', 'None');
+ini_set('session.cookie_secure', '1');
+ini_set('session.cookie_httponly', '1');
+
+// ✅ If cors.php is in backend/ root, path is ../cors.php
+require_once '../cors.php';
+
+// ✅ content-type header after CORS
 header("Content-Type: application/json");
 
-session_start(); // ✅ FIXED
-require_once 'cors.php'; // ✅ CORS HANDLING
- 
-
+// ✅ Handle OPTIONS preflight and exit early
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 
-require_once 'config.php';
+// ✅ session_start AFTER cookie settings, AFTER CORS
+session_start();
+
+// ✅ config.php is in backend/ root, so path is ../config.php
+require_once '../config.php';
 
 $data = json_decode(file_get_contents("php://input"), true);
 if ($data === null) {

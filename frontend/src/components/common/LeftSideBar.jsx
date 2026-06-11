@@ -55,7 +55,7 @@ const LeftSideBar = () => {
   const handleLogout = async () => {
     try {
       await axios.post(
-        "/backend/login_registration.php",
+        "/backend/auth/login_registration.php",
         {},
         { withCredentials: true },
       );
