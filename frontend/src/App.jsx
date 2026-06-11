@@ -18,7 +18,7 @@ function App() {
       <Route
         element={
           <ProtectedRoute>
-            <Maincontainer />
+            <MainContainer />
           </ProtectedRoute>
         }
       >
