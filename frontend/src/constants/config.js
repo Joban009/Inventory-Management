@@ -3,10 +3,11 @@
  * Centralized settings and constants
  */
 
-  // frontend/src/constants/config.js
+// frontend/src/constants/config.js
 
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL 
-  || 'http://localhost/Inventory_Management/InventoryMGT/backend';
+export const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://inventory-management-te6v.onrender.com";
 
 export const API_ENDPOINTS = {
   // Auth
