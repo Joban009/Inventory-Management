@@ -1,7 +1,7 @@
 <?php
 // config.php — works for both local (XAMPP) and production (Render)
 
-require_once './cors.php';
+require_once 'cors.php';
 
 $host     = getenv('DB_HOST')     ?: 'localhost';
 $port     = getenv('DB_PORT')     ?: 3306;
