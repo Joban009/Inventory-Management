@@ -1,7 +1,6 @@
 <?php
 $allowed_origins = [
     'https://www.joban.com.np',
-    'https://joban.com.np',
     'http://localhost:5173',
     'http://localhost:3000',
     getenv('FRONTEND_URL') ?: '',
