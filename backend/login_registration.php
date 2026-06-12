@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 session_start();
 
 // ✅ config.php is in backend/ root, so path is ../config.php
-require_once '../config.php';
+require_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"), true);
 if ($data === null) {
