@@ -5,7 +5,7 @@ ini_set('session.cookie_secure', '1');
 ini_set('session.cookie_httponly', '1');
 
 // ✅ If cors.php is in backend/ root, path is ../cors.php
-require_once '../cors.php';
+require_once './cors.php';
 
 // ✅ content-type header after CORS
 header("Content-Type: application/json");
