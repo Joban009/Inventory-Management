@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
-import axios from "axios";
+import { authService } from "../../services/api.js";
 import { HiOutlineMail } from "react-icons/hi";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { FcGoogle } from "react-icons/fc";
 import { LuPackage } from "react-icons/lu";
-
-const API_BASE = "/backend/auth/login_registration.php";
 
 const inputShell =
   "flex w-full items-center gap-3 rounded-xl border border-transparent bg-[#F3F4FF] px-4 py-3 text-sm text-gray-900 outline-none transition focus-within:border-indigo-200 focus-within:ring-2 focus-within:ring-indigo-100";
@@ -50,34 +48,26 @@ const Login = () => {
       let res;
 
       if (currState === "Sign Up") {
-        res = await axios.post(API_BASE, {
-          action: "register",
-          userName: formData.get("fname"),
-          orgName: formData.get("orgname"),
-          userEmail: formData.get("usernameoremail"),
-          password: formData.get("password"),
-        });
+        res = await authService.register(
+          formData.get("fname"),
+          formData.get("orgname"),
+          formData.get("usernameoremail"),
+          formData.get("password"),
+        );
 
         if (res.data.status === "success") {
           alert("Registration successful");
           setCurrState("Login");
         }
       } else {
-        res = await axios.post(
-          API_BASE,
-          {
-            action: "login",
-            userEmail: formData.get("usernameoremail"),
-            password: formData.get("password"),
-          },
-          {
-            withCredentials: true, // IMPORTANT
-          },
+        res = await authService.login(
+          formData.get("usernameoremail"),
+          formData.get("password"),
         );
 
         if (res.data.status === "success") {
           localStorage.setItem("user", JSON.stringify(res.data.user));
-          localStorage.setItem("isLoggedIn", "true"); // ADD THIS
+          localStorage.setItem("isLoggedIn", "true");
           navigate("/dashboard");
         }
       }
