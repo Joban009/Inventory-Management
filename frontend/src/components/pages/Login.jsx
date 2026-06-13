@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { authService } from "../../services/api.js";
 import { HiOutlineMail } from "react-icons/hi";
@@ -40,48 +40,52 @@ const Login = () => {
   const [currState, setCurrState] = useState("Login");
   const [showPassword, setShowPassword] = useState(false);
 
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    const user = localStorage.getItem("user");
+    if (isLoggedIn && user) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [navigate]);
+
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
 
     try {
-      let res;
-
       if (currState === "Sign Up") {
-        res = await authService.register(
+        const res = await authService.register(
           formData.get("fname"),
           formData.get("orgname"),
           formData.get("usernameoremail"),
           formData.get("password"),
         );
 
-        if (res.data.status === "success") {
-          alert("Registration successful");
-          setCurrState("Login");
+        if (res.data.status !== "success") {
+          throw new Error(res.data.message);
         }
-      } else {
-        res = await authService.login(
-          formData.get("usernameoremail"),
-          formData.get("password"),
-        );
 
-        if (res.data.status === "success") {
-          localStorage.setItem("user", JSON.stringify(res.data.user));
-          localStorage.setItem("isLoggedIn", "true");
-          navigate("/dashboard");
-        }
+        alert("Registration successful");
+        setCurrState("Login");
+        return;
       }
+
+      const res = await authService.login(
+        formData.get("usernameoremail"),
+        formData.get("password"),
+      );
 
       if (res.data.status !== "success") {
         throw new Error(res.data.message);
       }
+
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("isLoggedIn", "true");
+      navigate("/dashboard", { replace: true });
     } catch (err) {
       alert(
         err.response?.data?.message || err.message || "Something went wrong",
       );
-      localStorage.removeItem("user");
-      localStorage.removeItem("isLoggedIn");
-      navigate("/");
     }
   };
 

@@ -1,9 +1,11 @@
 import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({ children }) => {
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
+const isAuthenticated = () =>
+  localStorage.getItem("isLoggedIn") === "true" &&
+  Boolean(localStorage.getItem("user"));
 
-  if (!isLoggedIn) {
+const ProtectedRoute = ({ children }) => {
+  if (!isAuthenticated()) {
     return <Navigate to="/" replace />;
   }
 
