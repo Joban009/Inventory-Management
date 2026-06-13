@@ -1,8 +1,12 @@
 <?php
+ini_set('session.cookie_samesite', 'None');
+ini_set('session.cookie_secure', '1');
+ini_set('session.cookie_httponly', '1');
+
+header("Content-Type: application/json");
+require_once 'config.php';
 
 session_start();
-
-require_once 'config.php'; // ✅ CORS HANDLING
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);

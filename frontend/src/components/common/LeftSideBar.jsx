@@ -7,7 +7,7 @@ import { IoMdSettings } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import axios from "axios";
+import { authService } from "../../services/api.js";
 
 const NavItem = ({ to, icon, label, onNavigate }) => {
   const Icon = icon;
@@ -39,10 +39,14 @@ const LeftSideBar = () => {
   const [name, setName] = useState("");
   const [orgname, setOrgname] = useState("");
   useEffect(() => {
-    axios
-      .get("/backend/auth_check.php", {
-        withCredentials: true,
-      })
+    const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+    if (storedUser) {
+      setName(storedUser.name || "");
+      setOrgname(storedUser.org_name || "");
+    }
+
+    authService
+      .check()
       .then((res) => {
         if (res.data.status === "success") {
           setName(res.data.name);
@@ -52,21 +56,10 @@ const LeftSideBar = () => {
       .catch((err) => console.log(err));
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await axios.post(
-        "/backend/auth/login_registration.php",
-        {},
-        { withCredentials: true },
-      );
-    } catch (e) {
-      // Even if the request fails, we still clear local state.
-      console.error("Logout request failed:", e);
-    } finally {
-      localStorage.removeItem("user");
-      localStorage.removeItem("isLoggedIn");
-      navigate("/");
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("isLoggedIn");
+    navigate("/");
   };
 
   return (

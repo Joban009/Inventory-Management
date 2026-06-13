@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import ApexCharts from "apexcharts";
+import { parseResponseSafely } from "../../utils/helpers";
 
 const StockByCat = () => {
   const containerRef = useRef(null);
@@ -12,9 +13,9 @@ const StockByCat = () => {
         const res = await fetch("/backend/stock_by_category.php", {
           credentials: "include",
         });
-        const json = await res.json();
+        const json = await parseResponseSafely(res);
         console.log("Stock by category data:", json);
-        if (json.status === "success") {
+        if (json && json.status === "success") {
           setChartData({ categories: json.categories, stocks: json.stocks });
         }
       } catch (err) {

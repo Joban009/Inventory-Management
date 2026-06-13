@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import ApexCharts from "apexcharts";
+import { parseResponseSafely } from "../../utils/helpers";
 
 const InventoryValueChart = () => {
   const containerRef = useRef(null);
@@ -13,8 +14,8 @@ const InventoryValueChart = () => {
         const res = await fetch(`/backend/inventory_value.php?range=${range}`, {
           credentials: "include",
         });
-        const json = await res.json();
-        if (json.status === "success") {
+        const json = await parseResponseSafely(res);
+        if (json && json.status === "success") {
           const categories = json.data.map((r) => r.day);
           const values = json.data.map((r) => r.inventory_value);
           setChartData({ categories, values });

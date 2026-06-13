@@ -2,27 +2,29 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import LeftSideBar from "../../common/LeftSideBar";
 import Footer from "../../common/Footer";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { authService } from "../../../services/api.js";
 
 const MainContainer = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get("/backend/auth_check.php", {
-        withCredentials: true,
-      })
+    authService
+      .check()
       .then((res) => {
-        if (res.data.status !== "success") {
+        if (res.data.status !== "success" && !localStorage.getItem("user")) {
+          localStorage.removeItem("isLoggedIn");
           navigate("/");
         }
       })
       .catch(() => {
-        navigate("/");
+        if (!localStorage.getItem("user")) {
+          localStorage.removeItem("isLoggedIn");
+          navigate("/");
+        }
       });
-  }, []);
+  }, [navigate]);
   return (
     <div className="flex min-h-screen bg-slate-50">
       <LeftSideBar />
