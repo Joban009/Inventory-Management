@@ -30,7 +30,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/backend": {
-        target: "http://localhost", // your local XAMPP
+        target: "http://localhost/Inventory_Management/InventoryMGT",
         changeOrigin: true,
       },
     },

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import ApexCharts from "apexcharts";
+import apiClient from "../../services/api.js";
 
 const StockTrendChart = ({ days = "7" }) => {
   const containerRef = useRef(null);
@@ -9,13 +10,10 @@ const StockTrendChart = ({ days = "7" }) => {
   useEffect(() => {
     const fetchChartData = async () => {
       try {
-        const res = await fetch(
-          `/backend/analytics/stock_trend.php?days=${days}`,
-          {
-            credentials: "include",
-          },
-        );
-        const json = await res.json();
+        const res = await apiClient.get("/stock_trend.php", {
+          params: { days },
+        });
+        const json = res.data;
         console.log("Stock trend data:", json);
         if (json.status === "success") {
           setChartData({ days: json.days, stocks: json.stocks });
