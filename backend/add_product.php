@@ -1,6 +1,7 @@
 <?php
 header("Content-Type: application/json");
 
+require_once 'config.php';
 // 🔥 Handle preflight request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -24,7 +25,6 @@ $stock_qty = $data['stock_qty'];
 $price = $data['price'];
 $description = $data['description'];
 
-require_once 'config.php';
 
 $stmt = $conn->prepare("INSERT INTO products (name, category, stock_qty, price, description) VALUES (?, ?, ?, ?, ?)");
 $stmt->bind_param("ssids", $name, $category, $stock_qty, $price, $description);

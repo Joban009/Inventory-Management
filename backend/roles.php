@@ -1,5 +1,6 @@
 <?php
 header("Content-Type: application/json");
+require_once 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -7,7 +8,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 session_start();
-require_once 'config.php';
 
 // Check authentication - admin only
 if (!isset($_SESSION['user_id'])) {

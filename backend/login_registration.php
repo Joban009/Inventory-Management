@@ -6,6 +6,7 @@ ini_set('session.cookie_httponly', '1');
 
 // ✅ content-type header after CORS
 header("Content-Type: application/json");
+require_once 'config.php';
 
 // ✅ Handle OPTIONS preflight and exit early
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -17,7 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 session_start();
 
 // ✅ config.php is in backend/ root, so path is ../config.php
-require_once 'config.php';
 
 $data = json_decode(file_get_contents("php://input"), true);
 if ($data === null) {
