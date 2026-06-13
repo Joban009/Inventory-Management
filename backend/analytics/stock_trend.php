@@ -14,8 +14,8 @@ $sql = "SELECT
         SUM(stock) AS total_stock
         FROM products
         WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
-        GROUP BY DATE(created_at)
-        ORDER BY created_at ASC";
+        GROUP BY DATE(created_at), day_name
+        ORDER BY DATE(created_at) ASC";
 
 $result = $conn->query($sql);
 
