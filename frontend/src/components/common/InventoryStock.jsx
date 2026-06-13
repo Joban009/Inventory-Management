@@ -42,7 +42,7 @@ const InventoryStock = ({ variant = "dashboard" }) => {
   const fetchStats = async () => {
     try {
       const response = await fetch(
-        "http://localhost/Inventory_Management/InventoryMGT/backend/products.php",
+        "https://inventory-management-te6v.onrender.com/products.php",
       );
       const data = await response.json();
       console.log("API Response:", data);

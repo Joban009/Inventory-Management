@@ -155,7 +155,7 @@ Both backend and frontend have been successfully organized:
 import axios from "axios";
 
 const response = await axios.get(
-  "http://localhost/Inventory_Management/InventoryMGT/backend/suppliers.php",
+  "https://inventory-management-te6v.onrender.com/suppliers.php",
   { withCredentials: true },
 );
 ```

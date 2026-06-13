@@ -684,7 +684,7 @@ Source Code:
 1. Database: Import DATABASE_SETUP.sql into MySQL
 2. Config: backend/config.php (already configured for XAMPP)
 3. Start: XAMPP Apache + MySQL
-4. API: http://localhost/Inventory_Management/InventoryMGT/backend/
+4. API: https://inventory-management-te6v.onrender.com/
 ```
 
 ### Frontend Setup
@@ -700,7 +700,7 @@ Source Code:
 
 ```
 Login:      http://localhost:5173
-Backend API: http://localhost/Inventory_Management/InventoryMGT/backend/
+Backend API: https://inventory-management-te6v.onrender.com/
 Database:   root user @ localhost:3306
 ```
 
